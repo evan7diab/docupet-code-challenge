@@ -13,9 +13,7 @@
     <header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
         <div class="flex items-center gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-docupet-blue">
-                <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 2C9.24 2 7 4.24 7 7c0 1.57.69 2.97 1.78 3.93C6.32 11.6 5 13.97 5 16.5V20h14v-3.5c0-2.53-1.32-4.9-3.22-5.57C16.31 9.97 17 8.57 17 7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm-2 8.08V18h4v-5.92c1.16-.41 2-1.53 2-2.83 0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1 0 1.3.84 2.42 2 2.83z"/>
-                </svg>
+                <i class="fa-solid fa-paw text-lg text-white" aria-hidden="true"></i>
             </div>
             <div>
                 <div class="font-semibold text-gray-900">DocuPet</div>
@@ -32,9 +30,7 @@
     <div class="flex justify-center gap-2 py-6">
         @foreach(range(1, 5) as $step)
             <span class="{{ $step <= 2 ? 'text-docupet-green' : 'text-gray-400' }}">
-                <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 2C9.24 2 7 4.24 7 7c0 1.57.69 2.97 1.78 3.93C6.32 11.6 5 13.97 5 16.5V20h14v-3.5c0-2.53-1.32-4.9-3.22-5.57C16.31 9.97 17 8.57 17 7c0-2.76-2.24-5-5-5z"/>
-                </svg>
+                <i class="fa-solid fa-paw text-3xl" aria-hidden="true"></i>
             </span>
         @endforeach
     </div>
