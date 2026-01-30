@@ -26,12 +26,20 @@
         </nav>
     </header>
 
-    {{-- Progress (5 paws: 2 active green, 3 inactive gray) --}}
-    <div class="flex justify-center gap-2 py-6">
-        @foreach(range(1, 5) as $step)
-            <span class="{{ $step <= 2 ? 'text-docupet-green' : 'text-gray-400' }}">
+    {{-- Progress (5 paws: clickable, highlighted up to current step from ?step=) --}}
+    @php
+        $currentStep = min(5, max(1, (int) request('step', 1)));
+    @endphp
+    <div class="flex justify-center gap-2 py-6" role="navigation" aria-label="Registration progress">
+        @foreach(range(1, 5) as $stepNumber)
+            <a
+                href="{{ request()->fullUrlWithQuery(['step' => $stepNumber]) }}"
+                class="transition-colors hover:opacity-80 {{ $stepNumber <= $currentStep ? 'text-docupet-green' : 'text-gray-400' }}"
+                aria-label="Go to step {{ $stepNumber }}"
+                aria-current="{{ $stepNumber === $currentStep ? 'step' : false }}"
+            >
                 <i class="fa-solid fa-paw text-3xl" aria-hidden="true"></i>
-            </span>
+            </a>
         @endforeach
     </div>
 
