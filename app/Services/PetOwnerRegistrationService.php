@@ -11,6 +11,6 @@ class PetOwnerRegistrationService
      */
     public function loadFormView(): View
     {
-        return view('pet-owner-form');
+        return view('blades.pet-owner-form');
     }
 }
