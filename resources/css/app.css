@@ -1,18 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer components {
-    .docupet-blue {
-        @apply text-docupet-blue;
-    }
-    .docupet-bg-blue {
-        @apply bg-docupet-blue;
-    }
-    .paw-active {
-        @apply text-docupet-green;
-    }
-    .paw-inactive {
-        @apply text-gray-400;
-    }
-}
