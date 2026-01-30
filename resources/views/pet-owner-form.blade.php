@@ -93,9 +93,10 @@
                 {{-- Gender --}}
                 <div>
                     <p class="mb-2 text-sm font-medium text-gray-700">What gender are they?</p>
-                    <div class="inline-flex rounded-lg border border-gray-300 bg-gray-50 p-0.5">
-                        <button type="button" class="rounded-md bg-docupet-blue px-6 py-2 text-sm font-medium text-white">Female</button>
-                        <button type="button" class="rounded-md px-6 py-2 text-sm font-medium text-docupet-blue hover:bg-gray-100">Male</button>
+                    <input type="hidden" name="gender" id="gender-value" value="female">
+                    <div id="gender-toggle" class="inline-flex rounded-lg border border-gray-300 bg-gray-50 p-0.5" role="group" aria-label="Gender">
+                        <button type="button" data-gender="female" class="gender-option rounded-md bg-docupet-blue px-6 py-2 text-sm font-medium text-white">Female</button>
+                        <button type="button" data-gender="male" class="gender-option rounded-md px-6 py-2 text-sm font-medium text-docupet-blue hover:bg-gray-100">Male</button>
                     </div>
                 </div>
             </div>
@@ -107,5 +108,23 @@
     </main>
 
     <footer class="py-8 text-center text-sm text-gray-400">Footer TBD</footer>
+
+    <script>
+        document.querySelectorAll('.gender-option').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var value = this.getAttribute('data-gender');
+                document.getElementById('gender-value').value = value;
+                document.querySelectorAll('.gender-option').forEach(function (b) {
+                    if (b.getAttribute('data-gender') === value) {
+                        b.classList.add('bg-docupet-blue', 'text-white');
+                        b.classList.remove('text-docupet-blue', 'hover:bg-gray-100');
+                    } else {
+                        b.classList.remove('bg-docupet-blue', 'text-white');
+                        b.classList.add('text-docupet-blue', 'hover:bg-gray-100');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
