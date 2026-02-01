@@ -35,7 +35,8 @@
             <a
                 v-for="n in 5"
                 :key="n"
-                :href="stepUrl(n)"
+                href="#"
+                @click.prevent="goToStep(n)"
                 :class="['transition-colors hover:opacity-80', n <= currentStep ? 'text-docupet-green' : 'text-gray-400']"
                 :aria-label="'Go to step ' + n"
                 :aria-current="n === currentStep ? 'step' : false"
@@ -46,6 +47,15 @@
 
         <main class="mx-auto max-w-xl px-6 pb-12">
             <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+                @if (session('success'))
+                    <div class="mb-6 rounded-lg bg-docupet-green/10 p-4 text-sm text-docupet-green">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                <form method="POST" action="{{ route('pet-owner.register.store') }}" id="pet-registration-form">
+                    @csrf
+                {{-- Form block (step 1) --}}
+                <div v-show="!showReview">
                 <h1 class="mb-8 text-xl font-semibold text-gray-900">Tell us about your pet</h1>
                 <div class="space-y-6">
                     {{-- Pet type --}}
@@ -138,12 +148,53 @@
                 <div class="mt-10">
                     <button
                         type="button"
+                        @click="onContinue"
                         :disabled="!canContinue"
                         :class="['w-full rounded-lg py-3 font-medium', canContinue ? 'cursor-pointer bg-docupet-blue text-white hover:opacity-90' : 'cursor-not-allowed bg-gray-300 text-gray-500']"
                     >
                         Continue
                     </button>
                 </div>
+                </div>
+
+                {{-- Review block (step 2, hidden until Continue clicked) --}}
+                <div v-show="showReview" class="space-y-6">
+                    <h1 class="mb-8 text-xl font-semibold text-gray-900">Review your pet's information</h1>
+                    <dl class="space-y-4">
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Type</dt>
+                            <dd class="mt-1 text-gray-900">@{{ selectedTypeName }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Name</dt>
+                            <dd class="mt-1 text-gray-900">@{{ name }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Breed</dt>
+                            <dd class="mt-1 text-gray-900">@{{ breedDisplay }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Gender</dt>
+                            <dd class="mt-1 text-gray-900 capitalize">@{{ gender }}</dd>
+                        </div>
+                    </dl>
+                    <div class="mt-10 flex gap-4">
+                        <button
+                            type="button"
+                            @click="goToStep(1)"
+                            class="flex-1 rounded-lg border border-gray-300 py-3 font-medium text-gray-700 hover:bg-gray-50"
+                        >
+                            Back
+                        </button>
+                        <button
+                            type="submit"
+                            class="flex-1 rounded-lg bg-docupet-blue py-3 font-medium text-white hover:opacity-90"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+                </form>
             </div>
         </main>
     </div>
@@ -161,7 +212,8 @@
                 breedClarification: '',
                 gender: 'female',
                 name: 'Monte',
-                currentStep: Math.min(5, Math.max(1, parseInt((new URLSearchParams(window.location.search)).get('step') || '1', 10))),
+                showReview: false,
+                currentStep: 1,
                 basePath: @json(url()->current()),
             },
             computed: {
@@ -180,10 +232,31 @@
                     if (this.showBreedClarification && this.breedClarification) return true;
                     return false;
                 },
+                selectedTypeName: function () {
+                    var type = this.types.find(function (t) { return String(t.id) === String(this.typeId); }.bind(this));
+                    return type ? type.name : '';
+                },
+                breedDisplay: function () {
+                    if (this.breedId) {
+                        var breed = this.breeds.find(function (b) { return String(b.id) === String(this.breedId); }.bind(this));
+                        return breed ? breed.name + (breed.is_dangerous ? ' (dangerous)' : '') : '';
+                    }
+                    if (this.breedClarification === 'unknown') return 'Unknown';
+                    if (this.breedClarification === 'mix') return 'Mixed';
+                    return '';
+                },
             },
             methods: {
                 onTypeChange: function () {
                     this.breedId = '';
+                },
+                onContinue: function () {
+                    this.showReview = true;
+                    this.currentStep = 2;
+                },
+                goToStep: function (step) {
+                    this.currentStep = step;
+                    this.showReview = step >= 2;
                 },
                 stepUrl: function (step) {
                     var base = this.basePath.split('?')[0];

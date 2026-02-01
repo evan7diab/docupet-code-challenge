@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Breed;
+use App\Models\Pet;
 use App\Models\Type;
 use Illuminate\Contracts\View\View;
 
@@ -20,5 +21,44 @@ class PetOwnerRegistrationService
             'types' => $types,
             'breeds' => $breeds,
         ]);
+    }
+
+    /**
+     * Save pet from form values.
+     * Maps form data to Pet model, snapshots is_dangerous from breed when applicable.
+     */
+    public function savePet(array $data): Pet
+    {
+        $breedId = !empty($data['breed_id']) ? (int) $data['breed_id'] : null;
+        $breedText = null;
+        $breedUnknown = false;
+
+        if (!$breedId) {
+            $clarification = $data['breed_clarification'] ?? null;
+            $breedUnknown = $clarification === 'unknown';
+            if ($clarification === 'mix') {
+                $breedText = isset($data['breed_text']) ? trim($data['breed_text']) : 'Mixed';
+            }
+        }
+
+        $isDangerous = false;
+        if ($breedId) {
+            $breed = Breed::find($breedId);
+            $isDangerous = $breed ? $breed->is_dangerous : false;
+        }
+
+        $petData = [
+            'type_id' => (int) $data['type_id'],
+            'name' => trim($data['name'] ?? ''),
+            'sex' => in_array($data['gender'] ?? '', ['male', 'female']) ? $data['gender'] : 'female',
+            'breed_id' => $breedId,
+            'breed_text' => $breedText,
+            'breed_unknown' => $breedUnknown,
+            'dob' => null,
+            'approx_age_years' => null,
+            'is_dangerous' => $isDangerous,
+        ];
+
+        return Pet::create($petData);
     }
 }
