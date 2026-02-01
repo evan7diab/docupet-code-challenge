@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repositories\BreedRepository;
+use App\Repositories\BreedRepositoryInterface;
+use App\Repositories\TypeRepository;
+use App\Repositories\TypeRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(TypeRepositoryInterface::class, TypeRepository::class);
+        $this->app->bind(BreedRepositoryInterface::class, BreedRepository::class);
     }
 
     /**
