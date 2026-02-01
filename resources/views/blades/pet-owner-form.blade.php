@@ -103,9 +103,6 @@
                                     @{{ breed.name + (breed.is_dangerous ? ' (dangerous)' : '') }}
                                 </option>
                             </select>
-                            <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <i class="fa-solid fa-chevron-down h-5 w-5" aria-hidden="true"></i>
-                            </span>
                         </div>
                         <div v-show="showBreedClarification" class="mt-2">
                             <p class="mb-2 text-sm text-gray-500">Choose One</p>
