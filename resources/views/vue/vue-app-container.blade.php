@@ -8,8 +8,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-gray-100 font-sans antialiased">
-    <div id="app">
-        <first-vue-component />
-    </div>
+    <div id="app"></div>
 </body>
 </html>
