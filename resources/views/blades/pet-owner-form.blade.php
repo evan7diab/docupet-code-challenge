@@ -143,7 +143,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
                 <div class="mt-10">
                     <button
