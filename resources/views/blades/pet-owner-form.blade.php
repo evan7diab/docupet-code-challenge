@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     @vite(['resources/css/app.css'])
 </head>
@@ -121,6 +122,49 @@
                         </div>
                     </div>
 
+                    {{-- Pet's Age --}}
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-700">Pet's Age</p>
+                        <p class="mb-4 text-sm text-gray-500">Do you know their date of birth?</p>
+                        <div class="mb-4 flex gap-6">
+                            <label class="flex cursor-pointer items-center gap-2">
+                                <input type="radio" name="knows_dob" value="no" v-model="knowsDob" class="border-gray-300 text-docupet-blue focus:ring-docupet-blue">
+                                <span class="text-gray-700">No</span>
+                            </label>
+                            <label class="flex cursor-pointer items-center gap-2">
+                                <input type="radio" name="knows_dob" value="yes" v-model="knowsDob" class="border-gray-300 text-docupet-blue focus:ring-docupet-blue">
+                                <span class="text-gray-700">Yes</span>
+                            </label>
+                        </div>
+
+                        {{-- Approximate Age (when No) --}}
+                        <div v-show="knowsDob === 'no'" class="mt-4">
+                            <label for="approx-age" class="mb-2 block text-sm font-medium text-gray-700">Approximate Age</label>
+                            <select
+                                id="approx-age"
+                                name="approx_age_years"
+                                v-model="approxAgeYears"
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-docupet-blue"
+                            >
+                                <option value="">Select age</option>
+                                <option v-for="age in 20" :key="age" :value="age">@{{ age }} year@{{ age !== 1 ? 's' : '' }}</option>
+                            </select>
+                        </div>
+
+                        {{-- Date of Birth (when Yes) --}}
+                        <div v-show="knowsDob === 'yes'" class="mt-4">
+                            <label for="dob" class="mb-2 block text-sm font-medium text-gray-700">Date of Birth</label>
+                            <input
+                                id="dob"
+                                type="date"
+                                name="dob"
+                                v-model="dob"
+                                :max="maxDobDate"
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-docupet-blue"
+                            >
+                        </div>
+                    </div>
+
                     {{-- Gender --}}
                     <div>
                         <p class="mb-2 text-sm font-medium text-gray-700">What gender are they?</p>
@@ -176,6 +220,10 @@
                             <dt class="text-sm font-medium text-gray-500">Gender</dt>
                             <dd class="mt-1 text-gray-900 capitalize">@{{ gender }}</dd>
                         </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Age</dt>
+                            <dd class="mt-1 text-gray-900">@{{ ageDisplay }}</dd>
+                        </div>
                     </dl>
                     <div class="mt-10 flex gap-4">
                         <button
@@ -211,6 +259,9 @@
                 breedClarification: '',
                 gender: 'female',
                 name: 'Monte',
+                knowsDob: '',
+                approxAgeYears: null,
+                dob: '',
                 showReview: false,
                 currentStep: 1,
                 basePath: @json(url()->current()),
@@ -227,8 +278,10 @@
                 },
                 canContinue: function () {
                     if (!this.typeId || !this.name || !this.name.trim()) return false;
-                    if (this.breedId) return true;
-                    if (this.showBreedClarification && this.breedClarification) return true;
+                    if (!this.breedId && !(this.showBreedClarification && this.breedClarification)) return false;
+                    if (!this.knowsDob) return false;
+                    if (this.knowsDob === 'no') return this.approxAgeYears >= 1 && this.approxAgeYears <= 20;
+                    if (this.knowsDob === 'yes') return this.dob && this.dob.length > 0;
                     return false;
                 },
                 selectedTypeName: function () {
@@ -242,6 +295,29 @@
                     }
                     if (this.breedClarification === 'unknown') return 'Unknown';
                     if (this.breedClarification === 'mix') return 'Mixed';
+                    return '';
+                },
+                maxDobDate: function () {
+                    return new Date().toISOString().split('T')[0];
+                },
+                ageDisplay: function () {
+                    if (this.knowsDob === 'no' && this.approxAgeYears) {
+                        return this.approxAgeYears + ' year' + (this.approxAgeYears !== 1 ? 's' : '') + ' (approximate)';
+                    }
+                    if (this.knowsDob === 'yes' && this.dob) {
+                        var birth = moment(this.dob);
+                        var today = moment();
+                        var years = today.diff(birth, 'years');
+                        birth.add(years, 'years');
+                        var months = today.diff(birth, 'months');
+                        birth.add(months, 'months');
+                        var days = today.diff(birth, 'days');
+                        var parts = [];
+                        if (years) parts.push(years + ' year' + (years !== 1 ? 's' : ''));
+                        if (months) parts.push(months + ' month' + (months !== 1 ? 's' : ''));
+                        if (days || parts.length === 0) parts.push(days + ' day' + (days !== 1 ? 's' : ''));
+                        return parts.join(', ');
+                    }
                     return '';
                 },
             },

@@ -47,6 +47,16 @@ class PetOwnerRegistrationService
             $isDangerous = $breed ? $breed->is_dangerous : false;
         }
 
+        $dob = null;
+        $approxAgeYears = null;
+        if (!empty($data['dob']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['dob'])) {
+            $dob = $data['dob'];
+        }
+        if ($dob === null && !empty($data['approx_age_years'])) {
+            $approx = (int) $data['approx_age_years'];
+            $approxAgeYears = ($approx >= 1 && $approx <= 20) ? $approx : null;
+        }
+
         $petData = [
             'type_id' => (int) $data['type_id'],
             'name' => trim($data['name'] ?? ''),
@@ -54,8 +64,8 @@ class PetOwnerRegistrationService
             'breed_id' => $breedId,
             'breed_text' => $breedText,
             'breed_unknown' => $breedUnknown,
-            'dob' => null,
-            'approx_age_years' => null,
+            'dob' => $dob,
+            'approx_age_years' => $approxAgeYears,
             'is_dangerous' => $isDangerous,
         ];
 

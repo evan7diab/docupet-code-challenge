@@ -33,6 +33,9 @@ class PetOwnerRegistrationController extends Controller
             'breed_id' => 'nullable|exists:breeds,id',
             'breed_clarification' => 'nullable|in:unknown,mix',
             'breed_text' => 'nullable|string|max:255',
+            'knows_dob' => 'required|in:yes,no',
+            'approx_age_years' => 'nullable|integer|min:1|max:20',
+            'dob' => 'nullable|date|before_or_equal:today',
         ]);
 
         $pet = $this->petOwnerRegistrationService->savePet($validated);
