@@ -17,12 +17,5 @@ Vue.component('breeds-searchable', BreedsSearchable);
 
 new Vue({
   el: '#app',
-  template: `
-    <main-layout :current-step="currentStep">
-      <registration-form />
-    </main-layout>
-  `,
-  data: {
-    currentStep: 1,
-  },
+  template: '<main-layout />',
 });

@@ -37,7 +37,18 @@
     <!-- Main content -->
     <main class="mx-auto max-w-xl px-6 pb-12">
       <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
-        <slot></slot>
+        <registration-form
+          v-if="!showReview"
+          @continue="onContinue"
+        />
+        <review
+          v-else
+          :form-data="formData"
+          :types="types"
+          :breeds="breeds"
+          @back="onBack"
+          @save="onSave"
+        />
       </div>
     </main>
 
@@ -46,12 +57,55 @@
 </template>
 
 <script>
+import { getTypes, getBreeds } from '../api/apiManager';
+import RegistrationForm from './RegistrationForm.vue';
+import Review from './Review.vue';
+
 export default {
   name: 'MainLayout',
-  props: {
-    currentStep: {
-      type: Number,
-      default: 1,
+  components: { RegistrationForm, Review },
+  data() {
+    return {
+      currentStep: 1,
+      showReview: false,
+      formData: null,
+      types: [],
+      breeds: [],
+    };
+  },
+  mounted() {
+    this.loadTypes();
+    this.loadBreeds();
+  },
+  methods: {
+    async loadTypes() {
+      try {
+        const { data } = await getTypes({ per_page: 100 });
+        this.types = Array.isArray(data) ? data : (data.data || []);
+      } catch (err) {
+        console.error('Failed to load types:', err);
+      }
+    },
+    async loadBreeds() {
+      try {
+        const { data } = await getBreeds({ per_page: 500 });
+        this.breeds = Array.isArray(data) ? data : (data.data || []);
+      } catch (err) {
+        console.error('Failed to load breeds:', err);
+      }
+    },
+    onContinue(form) {
+      this.formData = form;
+      this.showReview = true;
+      this.currentStep = 2;
+    },
+    onBack() {
+      this.showReview = false;
+      this.currentStep = 1;
+    },
+    onSave() {
+      // TODO: submit to API
+      console.log('Save', this.formData);
     },
   },
 };
