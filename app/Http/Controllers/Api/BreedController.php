@@ -20,11 +20,11 @@ class BreedController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $search = (string) ($request->input('search') ?? '');
-        $typeId = $request->has('type_id') ? (int) $request->input('type_id') : null;
-        $perPage = min(max((int) $request->input('per_page', 15), 1), 100);
-
-        $breeds = $this->breedService->list($search, $typeId, $perPage);
+        $breeds = $this->breedService->list(
+            search: $request->input('search'),
+            typeId: $request->integer('type_id') ?: null,
+            perPage: $request->integer('per_page') ?: null
+        );
 
         return response()->json($breeds);
     }
