@@ -28,6 +28,10 @@ if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "base64:" ]; then
   php artisan key:generate --force
 fi
 
+# Clear and cache config
+php artisan config:clear
+php artisan cache:clear
+
 php artisan migrate --force --no-interaction
 php artisan db:seed --force --no-interaction 2>/dev/null || true
 

@@ -26,7 +26,8 @@ WORKDIR /var/www/html
 # App files (vendor/node_modules excluded via .dockerignore)
 COPY . .
 RUN composer install --no-dev --no-scripts --prefer-dist \
-    && composer dump-autoload --optimize
+    && composer dump-autoload --optimize \
+    && php artisan package:discover --ansi || true
 RUN npm ci && npm run build && rm -rf node_modules
 
 RUN chmod +x /var/www/html/docker-entrypoint.sh \
