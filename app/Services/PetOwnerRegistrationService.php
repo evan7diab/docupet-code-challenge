@@ -29,11 +29,11 @@ class PetOwnerRegistrationService
      */
     public function savePet(array $data): Pet
     {
-        $breedId = !empty($data['breed_id']) ? (int) $data['breed_id'] : null;
+        $breedId = ! empty($data['breed_id']) ? (int) $data['breed_id'] : null;
         $breedText = null;
         $breedUnknown = false;
 
-        if (!$breedId) {
+        if (! $breedId) {
             $clarification = $data['breed_clarification'] ?? null;
             $breedUnknown = $clarification === 'unknown';
             if ($clarification === 'mix') {
@@ -49,10 +49,10 @@ class PetOwnerRegistrationService
 
         $dob = null;
         $approxAgeYears = null;
-        if (!empty($data['dob']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['dob'])) {
+        if (! empty($data['dob']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['dob'])) {
             $dob = $data['dob'];
         }
-        if ($dob === null && !empty($data['approx_age_years'])) {
+        if ($dob === null && ! empty($data['approx_age_years'])) {
             $approx = (int) $data['approx_age_years'];
             $approxAgeYears = ($approx >= 1 && $approx <= 20) ? $approx : null;
         }

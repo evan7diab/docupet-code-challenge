@@ -67,7 +67,7 @@ class Pet extends Model
         }
 
         if ($this->breed_text) {
-            return 'Mixed: ' . $this->breed_text;
+            return 'Mixed: '.$this->breed_text;
         }
 
         return 'Unknown';

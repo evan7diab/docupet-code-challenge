@@ -18,7 +18,7 @@ class BreedRepository implements BreedRepositoryInterface
             ->orderBy('name');
 
         if ($search !== '') {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%'.$search.'%');
         }
 
         if ($typeId !== null) {

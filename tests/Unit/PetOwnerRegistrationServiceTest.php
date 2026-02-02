@@ -25,7 +25,7 @@ class PetOwnerRegistrationServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new PetOwnerRegistrationService();
+        $this->service = new PetOwnerRegistrationService;
 
         $this->dogType = Type::create(['name' => 'Dog']);
         $this->labradorBreed = Breed::create([

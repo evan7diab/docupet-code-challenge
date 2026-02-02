@@ -16,7 +16,7 @@ class TypeRepository implements TypeRepositoryInterface
         $query = $this->model->newQuery()->orderBy('name');
 
         if ($search !== '') {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%'.$search.'%');
         }
 
         return $query->paginate($perPage);

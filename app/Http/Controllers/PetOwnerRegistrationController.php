@@ -42,6 +42,6 @@ class PetOwnerRegistrationController extends Controller
 
         return redirect()
             ->route('pet-owner.register')
-            ->with('success', 'Pet "' . e($pet->name) . '" has been registered.');
+            ->with('success', 'Pet "'.e($pet->name).'" has been registered.');
     }
 }
