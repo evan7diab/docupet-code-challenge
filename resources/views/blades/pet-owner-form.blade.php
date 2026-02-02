@@ -268,7 +268,7 @@
                 breedClarification: '',
                 breedText: '',
                 gender: 'female',
-                name: 'Monte',
+                name: '',
                 knowsDob: '',
                 approxAgeYears: null,
                 dob: '',
