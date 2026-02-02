@@ -57,11 +57,9 @@ export default {
       }
     },
     onSearch(search) {
-      console.log(search);
       if (this.searchTimeout) clearTimeout(this.searchTimeout);
       this.searchTimeout = setTimeout(async () => {
         await this.loadTypes(search || '');
-        console.log('loaded');
       }, 300);
     },
   },
