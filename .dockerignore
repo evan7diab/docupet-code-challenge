@@ -4,12 +4,17 @@
 /vendor
 /public/build
 /public/hot
+/screenshots
+/tests
+/storage/logs/*
 .env
 .env.*
 !.env.example
 *.md
 .DS_Store
 .phpunit.result.cache
+phpunit.xml
 docker-compose*.yml
 Dockerfile
 .dockerignore
+EMAIL_SUMMARY.md

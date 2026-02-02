@@ -5,6 +5,7 @@
 services:
   app:
     build: .
+    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
@@ -28,6 +29,7 @@ services:
 
   db:
     image: mysql:8.0
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: docupet
       MYSQL_USER: docupet
