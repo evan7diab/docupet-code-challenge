@@ -28,17 +28,25 @@
     <div class="mt-10 flex gap-4">
       <button
         type="button"
+        :disabled="saving"
         @click="$emit('back')"
-        class="flex-1 rounded-lg border border-gray-300 py-3 font-medium text-gray-700 hover:bg-gray-50"
+        :class="[
+          'flex-1 rounded-lg border border-gray-300 py-3 font-medium',
+          saving ? 'cursor-not-allowed bg-gray-50 text-gray-400' : 'text-gray-700 hover:bg-gray-50'
+        ]"
       >
         Back
       </button>
       <button
         type="button"
+        :disabled="saving"
         @click="$emit('save')"
-        class="flex-1 rounded-lg bg-docupet-blue py-3 font-medium text-white hover:opacity-90"
+        :class="[
+          'flex-1 rounded-lg py-3 font-medium',
+          saving ? 'cursor-not-allowed bg-docupet-blue/70 text-white' : 'bg-docupet-blue text-white hover:opacity-90'
+        ]"
       >
-        Save
+        {{ saving ? 'Saving...' : 'Save' }}
       </button>
     </div>
   </div>
@@ -59,6 +67,10 @@ export default {
     breeds: {
       type: Array,
       default: () => [],
+    },
+    saving: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {

@@ -5,10 +5,15 @@ namespace App\Services;
 use App\Models\Breed;
 use App\Models\Pet;
 use App\Models\Type;
+use App\Repositories\PetRepositoryInterface;
 use Illuminate\Contracts\View\View;
 
 class PetOwnerRegistrationService
 {
+    public function __construct(
+        private PetRepositoryInterface $petRepository
+    ) {}
+
     /**
      * Load and return the Pet Owner registration form view with types and breeds.
      */
@@ -69,6 +74,6 @@ class PetOwnerRegistrationService
             'is_dangerous' => $isDangerous,
         ];
 
-        return Pet::create($petData);
+        return $this->petRepository->create($petData);
     }
 }

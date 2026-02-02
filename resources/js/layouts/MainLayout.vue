@@ -37,7 +37,27 @@
     <!-- Main content -->
     <main class="mx-auto max-w-xl px-6 pb-12">
       <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+        <!-- Success message -->
+        <div
+          v-if="successMessage"
+          class="mb-6 rounded-lg bg-docupet-green/10 p-4 text-sm text-docupet-green"
+          role="status"
+        >
+          {{ successMessage }}
+        </div>
+
+        <!-- Error message (validation or server error) -->
+        <div
+          v-if="errorMessage"
+          class="mb-6 rounded-lg bg-red-50 p-4 text-sm text-red-700"
+          role="alert"
+        >
+          <p class="font-medium">Something went wrong</p>
+          <p class="mt-1">{{ errorMessage }}</p>
+        </div>
+
         <registration-form
+          :key="formKey"
           v-show="!showReview"
           @continue="onContinue"
         />
@@ -46,6 +66,7 @@
           :form-data="formData"
           :types="types"
           :breeds="breeds"
+          :saving="saving"
           @back="onBack"
           @save="onSave"
         />
@@ -57,20 +78,27 @@
 </template>
 
 <script>
-import { getTypes, getBreeds } from '../api/apiManager';
+import { getTypes, getBreeds, savePet } from '../api/apiManager';
+import serverResponseMixin from '../mixins/serverResponseMixin';
+import petPayloadMixin from '../mixins/petPayloadMixin';
 import RegistrationForm from './RegistrationForm.vue';
 import Review from './Review.vue';
 
 export default {
   name: 'MainLayout',
+  mixins: [serverResponseMixin, petPayloadMixin],
   components: { RegistrationForm, Review },
   data() {
     return {
       currentStep: 1,
       showReview: false,
       formData: null,
+      formKey: 0,
       types: [],
       breeds: [],
+      successMessage: '',
+      errorMessage: '',
+      saving: false,
     };
   },
   mounted() {
@@ -78,6 +106,7 @@ export default {
     this.loadBreeds();
   },
   methods: {
+    savePet,
     async loadTypes() {
       try {
         const { data } = await getTypes({ per_page: 100 });
@@ -95,17 +124,35 @@ export default {
       }
     },
     onContinue(form) {
+      this.errorMessage = '';
+      this.successMessage = '';
       this.formData = form;
       this.showReview = true;
       this.currentStep = 2;
     },
     onBack() {
+      this.errorMessage = '';
       this.showReview = false;
       this.currentStep = 1;
     },
-    onSave() {
-      // TODO: submit to API
-      console.log('Save', this.formData);
+    async onSave() {
+      if (!this.formData || this.saving) return;
+      this.saving = true;
+      this.errorMessage = '';
+      const payload = this.petPayload(this.formData);
+      try {
+        const { data } = await this.savePet(payload);
+        this.successMessage = this.getSuccessMessage(data, 'Pet registered successfully.');
+        this.showReview = false;
+        this.formData = null;
+        this.currentStep = 1;
+        this.formKey += 1;
+      } catch (err) {
+        this.errorMessage = this.formatApiError(err);
+        this.showReview = true;
+      } finally {
+        this.saving = false;
+      }
     },
   },
 };

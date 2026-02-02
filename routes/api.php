@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BreedController;
+use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\TypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/types', [TypeController::class, 'index']);
 Route::get('/breeds', [BreedController::class, 'index']);
+Route::post('/pets', [PetController::class, 'store']);

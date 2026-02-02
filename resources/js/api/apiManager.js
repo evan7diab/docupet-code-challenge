@@ -27,4 +27,13 @@ export function getBreeds(params = {}) {
   return api.get('/breeds', { params });
 }
 
+/**
+ * Save pet registration.
+ * @param {Object} data - { type_id, name, gender, breed_id?, breed_clarification?, breed_text?, knows_dob, approx_age_years?, dob? }
+ * @returns {Promise}
+ */
+export function savePet(data) {
+  return api.post('/pets', data);
+}
+
 export default api;
