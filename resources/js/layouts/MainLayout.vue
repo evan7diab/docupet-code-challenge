@@ -38,11 +38,11 @@
     <main class="mx-auto max-w-xl px-6 pb-12">
       <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
         <registration-form
-          v-if="!showReview"
+          v-show="!showReview"
           @continue="onContinue"
         />
         <review
-          v-else
+          v-show="showReview"
           :form-data="formData"
           :types="types"
           :breeds="breeds"
