@@ -30,6 +30,14 @@ DocuPet allows users to register their pets with the following information:
 
 The application showcases two different frontend implementations sharing the same backend API and business logic.
 
+### Demo
+
+<video src="screenshots/docupet-demo.webm" controls width="100%">
+  Your browser does not support the video tag.
+</video>
+
+*If the video doesn't play above, [download the demo video](screenshots/docupet-demo.webm).*
+
 ---
 
 ## Installation
