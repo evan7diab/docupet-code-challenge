@@ -11,7 +11,7 @@ services:
     environment:
       APP_NAME: Docupet-Challenge
       APP_ENV: local
-      APP_KEY: base64:dGhpc2lzYXZhbGlkMzJieXRla2V5Zm9ybGFyYXZlbA==
+      APP_KEY: base64:U2vDsF2z7JUZDZUwiDR95RD9deSIRoleEiBML7rtRZo=
       APP_DEBUG: "true"
       APP_URL: http://localhost:8000
       DB_CONNECTION: mysql

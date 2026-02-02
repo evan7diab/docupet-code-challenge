@@ -1,10 +1,17 @@
 #!/bin/sh
 set -e
 
-# Create .env file if missing (needed for some artisan commands)
-if [ ! -f .env ]; then
-  touch .env
-fi
+# Write environment variables to .env file (needed for artisan serve child processes)
+cat > .env <<EOF
+APP_KEY=$APP_KEY
+API_KEY=$API_KEY
+DB_CONNECTION=$DB_CONNECTION
+DB_HOST=$DB_HOST
+DB_PORT=$DB_PORT
+DB_DATABASE=$DB_DATABASE
+DB_USERNAME=$DB_USERNAME
+DB_PASSWORD=$DB_PASSWORD
+EOF
 
 # Wait for MySQL
 until php -r "
@@ -28,9 +35,8 @@ if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "base64:" ]; then
   php artisan key:generate --force
 fi
 
-# Clear and cache config
-php artisan config:clear
-php artisan cache:clear
+# Clear all caches (including bootstrap cache which may have stale data from build)
+php artisan optimize:clear
 
 php artisan migrate --force --no-interaction
 php artisan db:seed --force --no-interaction 2>/dev/null || true
