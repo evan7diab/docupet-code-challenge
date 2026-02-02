@@ -20,7 +20,7 @@ class TypeController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $search = $request->input('search', '');
+        $search = (string) ($request->input('search') ?? '');
         $perPage = min(max((int) $request->input('per_page', 15), 1), 100);
 
         $types = $this->typeService->list($search, $perPage);

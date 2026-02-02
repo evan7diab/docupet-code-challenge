@@ -4,17 +4,12 @@
 
     <div>
       <label for="type-id" class="mb-2 block text-sm font-medium text-gray-700">What type of pet?</label>
-      <select
+      <types-searchable
         id="type-id"
         v-model="form.typeId"
-        @change="onTypeChange"
-        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-docupet-blue"
-      >
-        <option value="">Select a type</option>
-        <option v-for="type in types" :key="type.id" :value="type.id">
-          {{ type.name }}
-        </option>
-      </select>
+        placeholder="Select a type"
+        @input="onTypeChange"
+      />
     </div>
 
     <div>
@@ -31,19 +26,13 @@
     <!-- Breed -->
     <div>
       <label for="breed" class="mb-2 block text-sm font-medium text-gray-700">What breed are they?</label>
-      <div class="relative">
-        <select
-          id="breed"
-          v-model="form.breedId"
-          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 pr-10 text-gray-900 placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-docupet-blue"
-        >
-          <option value="">Can't find it?</option>
-          <option v-for="breed in filteredBreeds" :key="breed.id" :value="breed.id">
-            {{ breed.name }}{{ breed.is_dangerous ? ' (dangerous)' : '' }}
-          </option>
-        </select>
-      </div>
-      <div v-show="showBreedClarification" class="mt-2">
+      <breeds-searchable
+        id="breed"
+        v-model="form.breedId"
+        :type-id="form.typeId"
+        placeholder="Can't find it?"
+      />
+      <div v-show="form.typeId && showBreedClarification" class="mt-2">
         <p class="mb-2 text-sm text-gray-500">Choose One</p>
         <div class="flex gap-6">
           <label class="flex cursor-pointer items-center gap-2">
@@ -157,14 +146,10 @@
 </template>
 
 <script>
-import { getTypes, getBreeds } from '../api/apiManager';
-
 export default {
   name: 'RegistrationForm',
   data() {
     return {
-      types: [],
-      breeds: [],
       form: {
         typeId: '',
         name: '',
@@ -178,12 +163,6 @@ export default {
     };
   },
   computed: {
-    filteredBreeds() {
-      if (!this.form.typeId) return this.breeds;
-      return this.breeds.filter(
-        (b) => String(b.type_id) === String(this.form.typeId)
-      );
-    },
     showBreedClarification() {
       return this.form.breedId === '' || this.form.breedId === null;
     },
@@ -199,29 +178,8 @@ export default {
       return false;
     },
   },
-  mounted() {
-    this.loadTypes();
-    this.loadBreeds();
-  },
   methods: {
-    async loadTypes() {
-      try {
-        const { data } = await getTypes();
-        this.types = Array.isArray(data) ? data : (data.data || []);
-      } catch (err) {
-        console.error('Failed to load types:', err);
-      }
-    },
-    async loadBreeds() {
-      try {
-        const { data } = await getBreeds();
-        this.breeds = Array.isArray(data) ? data : (data.data || []);
-      } catch (err) {
-        console.error('Failed to load breeds:', err);
-      }
-    },
     onTypeChange() {
-      this.form.breedId = '';
       this.form.breedClarification = '';
       this.$emit('type-change', this.form.typeId);
     },
