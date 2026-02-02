@@ -1,12 +1,23 @@
 import axios from 'axios';
 
+function getApiKey() {
+  const meta = document.querySelector('meta[name="api-key"]');
+  return (meta && meta.getAttribute('content')) || '';
+}
+
+const apiKey = getApiKey();
+const headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'X-Requested-With': 'XMLHttpRequest',
+};
+if (apiKey) {
+  headers['X-API-Key'] = apiKey;
+}
+
 const api = axios.create({
   baseURL: '/api',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-  },
+  headers,
 });
 
 /**

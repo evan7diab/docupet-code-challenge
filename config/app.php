@@ -61,6 +61,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | API Key
+    |--------------------------------------------------------------------------
+    |
+    | Protected API routes require this key via X-API-Key or Authorization: Bearer.
+    | Must be set; when empty, those routes return 503 (API key not configured).
+    |
+    */
+
+    'api_key' => env('API_KEY'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

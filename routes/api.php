@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/types', [TypeController::class, 'index']);
-Route::get('/breeds', [BreedController::class, 'index']);
-Route::post('/pets', [PetController::class, 'store']);
+Route::middleware('api.key')->group(function () {
+    Route::get('/types', [TypeController::class, 'index']);
+    Route::get('/breeds', [BreedController::class, 'index']);
+    Route::post('/pets', [PetController::class, 'store']);
+});

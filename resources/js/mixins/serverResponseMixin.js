@@ -22,6 +22,11 @@ export default {
         });
         return parts.join('. ');
       }
+      if (res.status === 503) {
+        return data?.message === 'API key not configured.'
+          ? 'Service is not configured. Please contact the administrator.'
+          : (data?.message || 'Service temporarily unavailable. Please try again later.');
+      }
       if (data?.message) return data.message;
       if (res.status === 422) return 'Please check your input and try again.';
       if (res.status >= 500) return 'Server error. Please try again later.';

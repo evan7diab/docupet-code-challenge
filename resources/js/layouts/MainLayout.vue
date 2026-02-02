@@ -113,6 +113,7 @@ export default {
         this.types = Array.isArray(data) ? data : (data.data || []);
       } catch (err) {
         console.error('Failed to load types:', err);
+        this.errorMessage = this.formatApiError(err);
       }
     },
     async loadBreeds() {
@@ -121,6 +122,7 @@ export default {
         this.breeds = Array.isArray(data) ? data : (data.data || []);
       } catch (err) {
         console.error('Failed to load breeds:', err);
+        this.errorMessage = this.errorMessage || this.formatApiError(err);
       }
     },
     onContinue(form) {
