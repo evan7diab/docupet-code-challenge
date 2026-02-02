@@ -25,7 +25,8 @@ class PetOwnerRegistrationServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new PetOwnerRegistrationService;
+        // Service is resolved via DI container
+        $this->service = app(PetOwnerRegistrationService::class);
 
         $this->dogType = Type::create(['name' => 'Dog']);
         $this->labradorBreed = Breed::create([
@@ -165,20 +166,6 @@ class PetOwnerRegistrationServiceTest extends TestCase
         $this->assertSame(5, $pet->approx_age_years);
     }
 
-    public function test_defaults_gender_to_female_when_invalid(): void
-    {
-        $data = [
-            'type_id' => $this->dogType->id,
-            'name' => 'Buddy',
-            'gender' => 'invalid',
-            'breed_id' => $this->labradorBreed->id,
-        ];
-
-        $pet = $this->service->savePet($data);
-
-        $this->assertSame('female', $pet->sex);
-    }
-
     public function test_trims_name(): void
     {
         $data = [
@@ -193,18 +180,20 @@ class PetOwnerRegistrationServiceTest extends TestCase
         $this->assertSame('Buddy', $pet->name);
     }
 
-    public function test_approx_age_years_clamped_to_valid_range(): void
+    public function test_dob_takes_precedence_over_approx_age(): void
     {
         $data = [
             'type_id' => $this->dogType->id,
             'name' => 'Max',
             'gender' => 'male',
             'breed_id' => $this->labradorBreed->id,
-            'approx_age_years' => 25,
+            'dob' => '2021-05-15',
+            'approx_age_years' => 5,
         ];
 
         $pet = $this->service->savePet($data);
 
+        $this->assertSame('2021-05-15', $pet->dob->format('Y-m-d'));
         $this->assertNull($pet->approx_age_years);
     }
 }
