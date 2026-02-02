@@ -17,7 +17,7 @@ class EnsureApiKey
         $expected = config('app.api_key');
 
         if (empty($expected)) {
-            return response()->json(['message' => 'API key not configured.'], 503);
+            return response()->json(['message' => __('messages.api.key_not_configured')], 503);
         }
 
         $key = $request->header('X-API-Key')
@@ -27,6 +27,6 @@ class EnsureApiKey
             return $next($request);
         }
 
-        return response()->json(['message' => 'Invalid or missing API key.'], 401);
+        return response()->json(['message' => __('messages.api.key_invalid')], 401);
     }
 }

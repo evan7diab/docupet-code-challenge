@@ -21,7 +21,7 @@ class PetController extends Controller
         $pet = $this->petOwnerRegistrationService->savePet($request->validated());
 
         return response()->json([
-            'message' => 'Pet registered successfully.',
+            'message' => __('messages.pet.registered_success'),
             'data' => $pet->load(['type', 'breed']),
         ], 201);
     }
