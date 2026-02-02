@@ -72,4 +72,45 @@ class Pet extends Model
 
         return 'Unknown';
     }
+
+    /**
+     * Resolve breed text for mixed breeds.
+     */
+    public static function resolveBreedText(?int $breedId, array $data): ?string
+    {
+        if ($breedId) {
+            return null;
+        }
+
+        $clarification = $data['breed_clarification'] ?? null;
+
+        if ($clarification === 'mix') {
+            return ! empty($data['breed_text']) ? trim($data['breed_text']) : 'Mixed';
+        }
+
+        return null;
+    }
+
+    /**
+     * Determine if breed is unknown.
+     * Breed is unknown when neither breed_id nor breed_text is set.
+     */
+    public static function isBreedUnknown(?int $breedId, ?string $breedText): bool
+    {
+        return $breedId === null && $breedText === null;
+    }
+
+    /**
+     * Resolve is_dangerous flag from breed.
+     */
+    public static function resolveIsDangerous(?int $breedId): bool
+    {
+        if (! $breedId) {
+            return false;
+        }
+
+        $breed = Breed::find($breedId);
+
+        return $breed?->is_dangerous ?? false;
+    }
 }

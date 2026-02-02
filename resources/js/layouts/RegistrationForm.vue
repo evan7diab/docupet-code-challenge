@@ -41,6 +41,7 @@
               type="radio"
               value="unknown"
               class="border-gray-300 text-docupet-blue focus:ring-docupet-blue"
+              @change="onBreedClarificationChange"
             >
             <span class="text-gray-700">I don't know</span>
           </label>
@@ -50,9 +51,21 @@
               type="radio"
               value="mix"
               class="border-gray-300 text-docupet-blue focus:ring-docupet-blue"
+              @change="onBreedClarificationChange"
             >
             <span class="text-gray-700">It's a mix</span>
           </label>
+        </div>
+        <!-- Breed text input for mix -->
+        <div v-show="form.breedClarification === 'mix'" class="mt-3">
+          <label for="breed-text" class="mb-2 block text-sm font-medium text-gray-700">Describe the mix</label>
+          <input
+            id="breed-text"
+            v-model="form.breedText"
+            type="text"
+            placeholder="e.g., Labrador/Poodle mix"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-docupet-blue"
+          >
         </div>
       </div>
     </div>
@@ -155,6 +168,7 @@ export default {
         name: '',
         breedId: '',
         breedClarification: '',
+        breedText: '',
         knowsDob: '',
         approxAgeYears: null,
         dob: '',
@@ -181,7 +195,13 @@ export default {
   methods: {
     onTypeChange() {
       this.form.breedClarification = '';
+      this.form.breedText = '';
       this.$emit('type-change', this.form.typeId);
+    },
+    onBreedClarificationChange() {
+      if (this.form.breedClarification !== 'mix') {
+        this.form.breedText = '';
+      }
     },
   },
 };

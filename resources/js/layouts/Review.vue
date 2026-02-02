@@ -86,7 +86,9 @@ export default {
         return breed ? breed.name + (breed.is_dangerous ? ' (dangerous)' : '') : '';
       }
       if (this.formData.breedClarification === 'unknown') return 'Unknown';
-      if (this.formData.breedClarification === 'mix') return 'Mixed';
+      if (this.formData.breedClarification === 'mix') {
+        return this.formData.breedText ? 'Mixed: ' + this.formData.breedText : 'Mixed';
+      }
       return '';
     },
     ageDisplay() {

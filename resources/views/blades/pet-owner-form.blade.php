@@ -108,13 +108,25 @@
                             <p class="mb-2 text-sm text-gray-500">Choose One</p>
                             <div class="flex gap-6">
                                 <label class="flex cursor-pointer items-center gap-2">
-                                    <input type="radio" name="breed_clarification" value="unknown" v-model="breedClarification" class="border-gray-300 text-docupet-blue focus:ring-docupet-blue">
+                                    <input type="radio" name="breed_clarification" value="unknown" v-model="breedClarification" @change="onBreedClarificationChange" class="border-gray-300 text-docupet-blue focus:ring-docupet-blue">
                                     <span class="text-gray-700">I don't know</span>
                                 </label>
                                 <label class="flex cursor-pointer items-center gap-2">
-                                    <input type="radio" name="breed_clarification" value="mix" v-model="breedClarification" class="border-gray-300 text-docupet-blue focus:ring-docupet-blue">
+                                    <input type="radio" name="breed_clarification" value="mix" v-model="breedClarification" @change="onBreedClarificationChange" class="border-gray-300 text-docupet-blue focus:ring-docupet-blue">
                                     <span class="text-gray-700">It's a mix</span>
                                 </label>
+                            </div>
+                            {{-- Breed text input for mix --}}
+                            <div v-show="breedClarification === 'mix'" class="mt-3">
+                                <label for="breed-text" class="mb-2 block text-sm font-medium text-gray-700">Describe the mix</label>
+                                <input
+                                    id="breed-text"
+                                    name="breed_text"
+                                    type="text"
+                                    v-model="breedText"
+                                    placeholder="e.g., Labrador/Poodle mix"
+                                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-docupet-blue"
+                                >
                             </div>
                         </div>
                     </div>
@@ -254,6 +266,7 @@
                 typeId: '',
                 breedId: '',
                 breedClarification: '',
+                breedText: '',
                 gender: 'female',
                 name: 'Monte',
                 knowsDob: '',
@@ -291,7 +304,9 @@
                         return breed ? breed.name + (breed.is_dangerous ? ' (dangerous)' : '') : '';
                     }
                     if (this.breedClarification === 'unknown') return 'Unknown';
-                    if (this.breedClarification === 'mix') return 'Mixed';
+                    if (this.breedClarification === 'mix') {
+                        return this.breedText ? 'Mixed: ' + this.breedText : 'Mixed';
+                    }
                     return '';
                 },
                 maxDobDate: function () {
@@ -321,6 +336,13 @@
             methods: {
                 onTypeChange: function () {
                     this.breedId = '';
+                    this.breedClarification = '';
+                    this.breedText = '';
+                },
+                onBreedClarificationChange: function () {
+                    if (this.breedClarification !== 'mix') {
+                        this.breedText = '';
+                    }
                 },
                 onContinue: function () {
                     this.showReview = true;
