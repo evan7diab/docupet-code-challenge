@@ -227,6 +227,12 @@ API_KEY=your-secret-api-key
 - `401 Unauthorized` - Invalid or missing API key
 - `503 Service Unavailable` - API key not configured on server
 
+**Screenshot: API Key Not Configured (503 Error)**
+
+When the API key is not configured on the server, the Vue app will display an error:
+
+![API Key Not Configured](screenshots/api-key-not-configured.png)
+
 ---
 
 ## Project Structure
