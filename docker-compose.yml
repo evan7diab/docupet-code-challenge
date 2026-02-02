@@ -11,6 +11,7 @@ services:
     environment:
       APP_NAME: Docupet-Challenge
       APP_ENV: local
+      APP_KEY: base64:docker0000000000000000000000000000000000000=
       APP_DEBUG: "true"
       APP_URL: http://localhost:8000
       DB_CONNECTION: mysql
@@ -20,6 +21,9 @@ services:
       DB_USERNAME: docupet
       DB_PASSWORD: secret
       API_KEY: docupet-api-key-secret
+      LOG_CHANNEL: stderr
+      CACHE_DRIVER: file
+      SESSION_DRIVER: file
       PAGINATION_DEFAULT_PER_PAGE: 15
       PAGINATION_MIN_PER_PAGE: 1
       PAGINATION_MAX_PER_PAGE: 100

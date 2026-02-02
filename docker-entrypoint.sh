@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
 
+# Create .env file if missing (needed for some artisan commands)
+if [ ! -f .env ]; then
+  touch .env
+fi
+
 # Wait for MySQL
 until php -r "
   try {
