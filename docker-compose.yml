@@ -1,0 +1,44 @@
+# DocuPet - run on any device (macOS, Linux, Windows)
+# Usage: docker compose up -d
+# App: http://localhost:8000
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: Docupet-Challenge
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: docupet
+      DB_USERNAME: docupet
+      DB_PASSWORD: secret
+      API_KEY: docupet-api-key-secret
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: docupet
+      MYSQL_USER: docupet
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootsecret
+    ports:
+      - "3306:3306"
+    volumes:
+      - docupet_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootsecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  docupet_mysql_data:
